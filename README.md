@@ -31,7 +31,7 @@ This installs the local App Fuel MCP adapter and, for Codex users, can also inst
 
 ## Install From GitHub
 
-After this repo is published, install the skill folder from:
+Install the skill folder from:
 
 ```text
 https://github.com/siron93/appfuel-agent-skill/tree/main/appfuel-data
