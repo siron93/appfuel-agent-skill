@@ -9,6 +9,8 @@ Use the App Fuel MCP tools for questions about enriched app, ad, creative, or ma
 
 Important: `query` is only for creative/content search inside ads or reels. Do not put app category, market, active/running status, media type, dates, revenue, grouping, or sorting intent into `query`; send those as explicit tool filters. If the user only asks for an app/category/status list and gives no creative-content constraint, pass `query=""`.
 
+For endpoint, request, and returned-field details, read `references/endpoints.md` and `references/response-fields.md`. Prefer the live schema endpoints when available, because the API contract can add fields over time.
+
 ## Workflow
 
 1. Call `describe_ads_schema` when you are unsure which ad filters exist.
@@ -22,7 +24,7 @@ Important: `query` is only for creative/content search inside ads or reels. Do n
 
 Schema tools are public documentation surfaces. Search and usage tools require an App Fuel API key. If the backend returns "Agent authentication credentials were not provided", tell the user to create a key in App Fuel's `/elite/api` section and install/configure the MCP server with that key.
 
-The hosted instruction document lives at `https://api.theappfuel.com/v1/elite/agent/instructions.md/` for clients that can fetch plain Markdown but do not support Codex skills.
+The hosted instruction document lives at `https://new.theappfuel.com/api/elite/v1/elite/agent/instructions.md/` for clients that can fetch plain Markdown but do not support Codex skills.
 
 ## Search Guidance
 
@@ -70,4 +72,3 @@ Video review is optional, not required. When a user wants to inspect many video 
 Lead with the count and the shareable gallery link. Then summarize the strongest examples or patterns with evidence from the tool response.
 
 If the tool response is empty or weak, say the App Fuel data did not contain enough matching evidence and suggest a broader query or fewer filters.
-
