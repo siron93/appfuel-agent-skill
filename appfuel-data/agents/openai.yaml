@@ -1,0 +1,15 @@
+interface:
+  display_name: "App Fuel Data"
+  short_description: "Search App Fuel ads and reels"
+  brand_color: "#FF3D19"
+  default_prompt: "Use $appfuel-data to find Health & Fitness apps that are currently running ads."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "appfuel-data"
+      description: "Local App Fuel MCP server configured with an App Fuel API key"
+
+policy:
+  allow_implicit_invocation: true
+
