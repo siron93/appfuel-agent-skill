@@ -1,8 +1,8 @@
 interface:
   display_name: "App Fuel Data"
-  short_description: "Search App Fuel ads and reels"
+  short_description: "Research apps, ads, reels, and saved findings"
   brand_color: "#FF3D19"
-  default_prompt: "Use $appfuel-data to find Health & Fitness apps that are currently running ads."
+  default_prompt: "Use $appfuel-data to find Health & Fitness apps running ads, then save the strongest examples to a collection."
 
 dependencies:
   tools:
@@ -12,4 +12,3 @@ dependencies:
 
 policy:
   allow_implicit_invocation: true
-
