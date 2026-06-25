@@ -28,7 +28,7 @@ For revenue-band requests such as "apps doing 20k a month and running ads", use 
 
 Schema tools are public documentation surfaces. Search, app detail, usage, and saved research tools require an App Fuel API key. If the backend returns "Agent authentication credentials were not provided", tell the user to create a key in App Fuel's `/api` section and configure the hosted MCP server with that key.
 
-The hosted instruction document lives at `https://new.theappfuel.com/api/elite/v1/elite/agent/instructions.md/` for clients that can fetch plain Markdown but do not support Codex skills.
+The hosted instruction document lives at `https://new.theappfuel.com/api/elite/v1/elite/agent/instructions.md` for clients that can fetch plain Markdown but do not support Codex skills.
 
 ## Hosted MCP Setup
 

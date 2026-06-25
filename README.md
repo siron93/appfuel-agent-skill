@@ -83,9 +83,9 @@ Paste this into an agent after the MCP connector is configured:
 Use App Fuel as an agent data source for app, paid ad, organic reel, and saved research intelligence.
 
 API base: https://new.theappfuel.com/api/elite/v1/elite
-Agent instructions: https://new.theappfuel.com/api/elite/v1/elite/agent/instructions.md/
-OpenAPI spec: https://new.theappfuel.com/api/elite/v1/elite/agent/openapi.json/
-Agent schema: https://new.theappfuel.com/api/elite/v1/elite/agent/schema/
+Agent instructions: https://new.theappfuel.com/api/elite/v1/elite/agent/instructions.md
+OpenAPI spec: https://new.theappfuel.com/api/elite/v1/elite/agent/openapi.json
+Agent schema: https://new.theappfuel.com/api/elite/v1/elite/agent/schema
 Hosted MCP URL: https://new.theappfuel.com/api/elite/v1/elite/mcp
 Skill source: https://github.com/siron93/appfuel-agent-skill/tree/main/appfuel-data
 
