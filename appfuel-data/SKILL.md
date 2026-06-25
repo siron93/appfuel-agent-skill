@@ -26,25 +26,47 @@ For endpoint, request, and returned-field details, read `references/endpoints.md
 
 For revenue-band requests such as "apps doing 20k a month and running ads", use `min_app_revenue` and `max_app_revenue` tool arguments or filters. For "around 20k", start with a narrow band such as 15000-30000; for "20k+" use `min_app_revenue=20000` and add `max_app_revenue` when the user asks for smaller apps or a tight band. Do not inspect local config files or credentials to discover hidden API options; use schema tools and documented filters.
 
-Schema tools are public documentation surfaces. Search, app detail, usage, and saved research tools require an App Fuel API key. If the backend returns "Agent authentication credentials were not provided", tell the user to create a key in App Fuel's `/api` section and install/configure the MCP server with that key.
+Schema tools are public documentation surfaces. Search, app detail, usage, and saved research tools require an App Fuel API key. If the backend returns "Agent authentication credentials were not provided", tell the user to create a key in App Fuel's `/api` section and configure the hosted MCP server with that key.
 
 The hosted instruction document lives at `https://new.theappfuel.com/api/elite/v1/elite/agent/instructions.md/` for clients that can fetch plain Markdown but do not support Codex skills.
 
-## Install Guidance
+## Hosted MCP Setup
 
-When App Fuel MCP tools are missing, pointed at an old local URL, or unauthenticated, tell the user to create an API key in App Fuel's `/api` section and run:
+Prefer the hosted Streamable HTTP MCP server:
 
-```bash
-read -rsp "App Fuel API key: " ELITE_API_KEY; echo && \
-export ELITE_API_KEY && \
-APPFUEL_INSTALLER="$(mktemp -t appfuel-mcp-install.XXXXXX.py)" && \
-curl -fsSL 'https://new.theappfuel.com/api/elite/v1/elite/mcp/install.py' -o "$APPFUEL_INSTALLER" && \
-python3 "$APPFUEL_INSTALLER" --api-base 'https://new.theappfuel.com/api/elite/v1/elite'
+```text
+https://new.theappfuel.com/api/elite/v1/elite/mcp
 ```
 
-For cautious/manual setup, download the installer to a temporary file first, run `python3 "$APPFUEL_INSTALLER" --help`, and inspect it before executing. Do not run remote code by piping curl directly into Python.
+Codex:
 
-The installer writes the local MCP adapter and prints generic MCP server JSON with absolute local paths for Claude Code, Cursor, Windsurf, VS Code, Codex, and other MCP clients. For Codex, it also installs this skill into `~/.codex/skills/appfuel-data` and updates Codex MCP config by default. If MCP tools do not reload in the current thread, ask the user to open a new session or restart the MCP client.
+```bash
+export APPFUEL_API_KEY='<account-api-key>' && \
+codex mcp add appfuel-data --url 'https://new.theappfuel.com/api/elite/v1/elite/mcp' --bearer-token-env-var APPFUEL_API_KEY
+```
+
+Claude Code:
+
+```bash
+claude mcp add --transport http appfuel-data 'https://new.theappfuel.com/api/elite/v1/elite/mcp' --header 'Authorization: Bearer <account-api-key>' --scope user
+```
+
+Cursor or other MCP clients:
+
+```json
+{
+  "mcpServers": {
+    "appfuel-data": {
+      "url": "https://new.theappfuel.com/api/elite/v1/elite/mcp",
+      "headers": {
+        "Authorization": "Bearer <account-api-key>"
+      }
+    }
+  }
+}
+```
+
+If MCP tools do not reload in the current thread after configuration, ask the user to open a new session or restart/refresh the MCP client.
 
 ## Search Guidance
 

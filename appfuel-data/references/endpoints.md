@@ -22,7 +22,8 @@ Public endpoints:
 - `GET /agent/schema/reels/`: organic reels filters, pagination, and response shape.
 - `GET /agent/schema/apps/`: app search/detail fields.
 - `GET /agent/schema/collections/`: saved research operations.
-- `GET /mcp/install.py/`: local MCP adapter installer. Download it to a temporary file and inspect it before running in cautious environments.
+- `GET /mcp/connection/`: hosted MCP connection snippets.
+- `GET|POST /mcp`: hosted Streamable HTTP MCP endpoint. Use this as the default agent connection.
 
 Protected endpoints:
 

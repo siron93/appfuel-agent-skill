@@ -16,25 +16,45 @@ appfuel-agent-skill
 - How to paginate and save useful findings to App Fuel collections.
 - How to avoid exposing internal/admin App Fuel surfaces.
 
-## Install
+## Hosted MCP
 
 First create an App Fuel API key in the App Fuel app under `/api`.
 
-For the production App Fuel API:
+Use the hosted Streamable HTTP MCP server:
 
-```bash
-read -rsp "App Fuel API key: " ELITE_API_KEY; echo && \
-export ELITE_API_KEY && \
-APPFUEL_INSTALLER="$(mktemp -t appfuel-mcp-install.XXXXXX.py)" && \
-curl -fsSL 'https://new.theappfuel.com/api/elite/v1/elite/mcp/install.py' -o "$APPFUEL_INSTALLER" && \
-python3 "$APPFUEL_INSTALLER" --api-base 'https://new.theappfuel.com/api/elite/v1/elite'
+```text
+https://new.theappfuel.com/api/elite/v1/elite/mcp
 ```
 
-This installs the local App Fuel MCP adapter and, for Codex users, can also install the `appfuel-data` skill.
-By default it installs that skill into `~/.codex/skills/appfuel-data`; use `--no-skill` only if you do not want that.
-For cautious/manual setup, download the installer, run `python3 "$APPFUEL_INSTALLER" --help`, and inspect it before executing.
+Codex:
 
-## Install From GitHub
+```bash
+export APPFUEL_API_KEY='<account-api-key>' && \
+codex mcp add appfuel-data --url 'https://new.theappfuel.com/api/elite/v1/elite/mcp' --bearer-token-env-var APPFUEL_API_KEY
+```
+
+Claude Code:
+
+```bash
+claude mcp add --transport http appfuel-data 'https://new.theappfuel.com/api/elite/v1/elite/mcp' --header 'Authorization: Bearer <account-api-key>' --scope user
+```
+
+Cursor or other MCP clients:
+
+```json
+{
+  "mcpServers": {
+    "appfuel-data": {
+      "url": "https://new.theappfuel.com/api/elite/v1/elite/mcp",
+      "headers": {
+        "Authorization": "Bearer <account-api-key>"
+      }
+    }
+  }
+}
+```
+
+## Codex Skill
 
 Install the skill folder from:
 
@@ -66,19 +86,14 @@ API base: https://new.theappfuel.com/api/elite/v1/elite
 Agent instructions: https://new.theappfuel.com/api/elite/v1/elite/agent/instructions.md/
 OpenAPI spec: https://new.theappfuel.com/api/elite/v1/elite/agent/openapi.json/
 Agent schema: https://new.theappfuel.com/api/elite/v1/elite/agent/schema/
+Hosted MCP URL: https://new.theappfuel.com/api/elite/v1/elite/mcp
 Skill source: https://github.com/siron93/appfuel-agent-skill/tree/main/appfuel-data
-
-If App Fuel MCP tools are missing, pointed at a dead local service, or not configured for this API base, run this installer. It installs the local MCP adapter and installs the appfuel-data Codex skill by default:
-
-```bash
-read -rsp "App Fuel API key: " ELITE_API_KEY; echo && export ELITE_API_KEY && APPFUEL_INSTALLER="$(mktemp -t appfuel-mcp-install.XXXXXX.py)" && curl -fsSL 'https://new.theappfuel.com/api/elite/v1/elite/mcp/install.py' -o "$APPFUEL_INSTALLER" && python3 "$APPFUEL_INSTALLER" --api-base 'https://new.theappfuel.com/api/elite/v1/elite'
-```
 
 Before answering App Fuel questions:
 1. Read the agent instructions URL.
 2. Use the OpenAPI/schema URLs to discover current endpoints and filters.
 3. If App Fuel MCP tools are available, use them instead of raw HTTP.
-4. If the current session cannot reload a newly installed MCP server, say that a new agent session or MCP client restart is needed.
+4. If the current session cannot see the hosted MCP server after configuration, say that a new agent session or MCP client restart/refresh is needed.
 5. Use query only for creative/content search inside ads or reels. Put category, running status, dates, grouping, and sorting in filters.
 6. Use pagination.next_request when a response has more results.
 7. Return view_url links when present so the user can inspect the matching creative gallery.
