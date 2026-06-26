@@ -10,35 +10,35 @@ Authentication:
 
 - Public documentation endpoints do not require authentication.
 - Search, app detail, usage, and saved research endpoints require an App Fuel API key.
-- Send the key as `Authorization: Bearer <account-api-key>` or `X-Elite-Agent-Key: <account-api-key>`.
+- Send the key as `Authorization: Bearer $APPFUEL_API_KEY` or `X-Elite-Agent-Key: $APPFUEL_API_KEY`.
 - If a protected endpoint returns `{"detail":"Agent authentication credentials were not provided."}`, create/configure an App Fuel API key and retry.
 
 Public endpoints:
 
-- `GET /agent/instructions.md/`: hosted Markdown instructions.
-- `GET /agent/openapi.json/`: curated OpenAPI spec.
-- `GET /agent/schema/`: combined agent contract.
-- `GET /agent/schema/ads/`: paid ads filters, pagination, and response shape.
-- `GET /agent/schema/reels/`: organic reels filters, pagination, and response shape.
-- `GET /agent/schema/apps/`: app search/detail fields.
-- `GET /agent/schema/collections/`: saved research operations.
-- `GET /mcp/connection/`: hosted MCP connection snippets.
+- `GET /agent/instructions.md`: hosted Markdown instructions.
+- `GET /agent/openapi.json`: curated OpenAPI spec.
+- `GET /agent/schema`: combined agent contract.
+- `GET /agent/schema/ads`: paid ads filters, pagination, and response shape.
+- `GET /agent/schema/reels`: organic reels filters, pagination, and response shape.
+- `GET /agent/schema/apps`: app search/detail fields.
+- `GET /agent/schema/collections`: saved research operations.
+- `GET /mcp/connection`: hosted MCP connection snippets.
 - `GET|POST /mcp`: hosted Streamable HTTP MCP endpoint. Use this as the default agent connection.
 
 Protected endpoints:
 
-- `GET /agent/usage/`: monthly request and download usage.
-- `POST /agent/apps/search/`: app discovery by name, category, audience, job-to-be-done, competitor set, or product concept.
-- `POST /agent/apps/detail/`: one app's metadata, intelligence, revenue series, latest rankings, similar apps, and App Fuel gallery entry points.
-- `POST /agent/ads/search/`: enriched paid ad search.
-- `POST /agent/ads/detail/`: detailed paid ad creative snapshot, media, app context, and sanitized AI analysis.
-- `POST /agent/ads/similar/`: similar paid ad creatives from one source creative.
-- `POST /agent/reels/search/`: enriched organic Instagram Reels search.
-- `POST /agent/collections/list/`: saved collections, items, filters, and pagination.
-- `POST /agent/collections/create/`: create or reuse a saved collection.
-- `POST /agent/collections/update/`: make a saved collection public or private.
-- `POST /agent/collections/save-item/`: save an app, paid ad, or organic reel.
-- `POST /agent/collections/save-filter/`: save a reusable research filter view.
+- `GET /agent/usage`: monthly request and download usage.
+- `POST /agent/apps/search`: app discovery by name, category, audience, job-to-be-done, competitor set, or product concept.
+- `POST /agent/apps/detail`: one app's metadata, intelligence, revenue series, latest rankings, similar apps, and App Fuel gallery entry points.
+- `POST /agent/ads/search`: enriched paid ad search.
+- `POST /agent/ads/detail`: detailed paid ad creative snapshot, media, app context, and sanitized AI analysis.
+- `POST /agent/ads/similar`: similar paid ad creatives from one source creative.
+- `POST /agent/reels/search`: enriched organic Instagram Reels search.
+- `POST /agent/collections/list`: saved collections, items, filters, and pagination.
+- `POST /agent/collections/create`: create or reuse a saved collection.
+- `POST /agent/collections/update`: make a saved collection public or private.
+- `POST /agent/collections/save-item`: save an app, paid ad, or organic reel.
+- `POST /agent/collections/save-filter`: save a reusable research filter view.
 
 App search request:
 

@@ -43,14 +43,24 @@ https://new.theappfuel.com/api/elite/v1/elite/mcp
 Codex:
 
 ```bash
-export APPFUEL_API_KEY='<account-api-key>' && \
+printf "App Fuel API key: "
+stty -echo
+IFS= read -r APPFUEL_API_KEY
+stty echo
+printf "\n"
+launchctl setenv APPFUEL_API_KEY "$APPFUEL_API_KEY"
 codex mcp add appfuel-data --url 'https://new.theappfuel.com/api/elite/v1/elite/mcp' --bearer-token-env-var APPFUEL_API_KEY
 ```
 
 Claude Code:
 
 ```bash
-claude mcp add --transport http appfuel-data 'https://new.theappfuel.com/api/elite/v1/elite/mcp' --header 'Authorization: Bearer <account-api-key>' --scope user
+printf "App Fuel API key: "
+stty -echo
+IFS= read -r APPFUEL_API_KEY
+stty echo
+printf "\n"
+claude mcp add --transport http appfuel-data 'https://new.theappfuel.com/api/elite/v1/elite/mcp' --header "Authorization: Bearer $APPFUEL_API_KEY" --scope user
 ```
 
 Cursor or other MCP clients:
@@ -61,12 +71,14 @@ Cursor or other MCP clients:
     "appfuel-data": {
       "url": "https://new.theappfuel.com/api/elite/v1/elite/mcp",
       "headers": {
-        "Authorization": "Bearer <account-api-key>"
+        "Authorization": "Bearer ${env:APPFUEL_API_KEY}"
       }
     }
   }
 }
 ```
+
+Keep the API key local. Do not paste it into chat or print it in command output; if a key was exposed in logs or a transcript, revoke it and create a replacement key.
 
 If MCP tools do not reload in the current thread after configuration, ask the user to open a new session or restart/refresh the MCP client.
 

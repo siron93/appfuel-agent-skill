@@ -29,14 +29,24 @@ https://new.theappfuel.com/api/elite/v1/elite/mcp
 Codex:
 
 ```bash
-export APPFUEL_API_KEY='<account-api-key>' && \
+printf "App Fuel API key: "
+stty -echo
+IFS= read -r APPFUEL_API_KEY
+stty echo
+printf "\n"
+launchctl setenv APPFUEL_API_KEY "$APPFUEL_API_KEY"
 codex mcp add appfuel-data --url 'https://new.theappfuel.com/api/elite/v1/elite/mcp' --bearer-token-env-var APPFUEL_API_KEY
 ```
 
 Claude Code:
 
 ```bash
-claude mcp add --transport http appfuel-data 'https://new.theappfuel.com/api/elite/v1/elite/mcp' --header 'Authorization: Bearer <account-api-key>' --scope user
+printf "App Fuel API key: "
+stty -echo
+IFS= read -r APPFUEL_API_KEY
+stty echo
+printf "\n"
+claude mcp add --transport http appfuel-data 'https://new.theappfuel.com/api/elite/v1/elite/mcp' --header "Authorization: Bearer $APPFUEL_API_KEY" --scope user
 ```
 
 Cursor or other MCP clients:
@@ -47,7 +57,7 @@ Cursor or other MCP clients:
     "appfuel-data": {
       "url": "https://new.theappfuel.com/api/elite/v1/elite/mcp",
       "headers": {
-        "Authorization": "Bearer <account-api-key>"
+        "Authorization": "Bearer ${env:APPFUEL_API_KEY}"
       }
     }
   }
@@ -88,17 +98,19 @@ OpenAPI spec: https://new.theappfuel.com/api/elite/v1/elite/agent/openapi.json
 Agent schema: https://new.theappfuel.com/api/elite/v1/elite/agent/schema
 Hosted MCP URL: https://new.theappfuel.com/api/elite/v1/elite/mcp
 Skill source: https://github.com/siron93/appfuel-agent-skill/tree/main/appfuel-data
+API key: keep it local as APPFUEL_API_KEY. Do not paste or print the key in chat.
 
 Before answering App Fuel questions:
-1. Read the agent instructions URL.
-2. Use the OpenAPI/schema URLs to discover current endpoints and filters.
+1. For Codex, install the skill with: Use $skill-installer to install appfuel-data from https://github.com/siron93/appfuel-agent-skill/tree/main/appfuel-data
+2. Read the agent instructions URL and use the OpenAPI/schema URLs to discover current endpoints and filters.
 3. If App Fuel MCP tools are available, use them instead of raw HTTP.
 4. If the current session cannot see the hosted MCP server after configuration, say that a new agent session or MCP client restart/refresh is needed.
 5. Use query only for creative/content search inside ads or reels. Put category, running status, dates, grouping, and sorting in filters.
 6. Use pagination.next_request when a response has more results.
 7. Return view_url links when present so the user can inspect the matching creative gallery.
 8. Use collection tools when the user asks to save or organize research.
-9. Do not print the API key in status messages or final notes.
+9. Do not ask the user to paste the API key into chat. If APPFUEL_API_KEY is missing, ask the user to run the secure local setup command themselves.
+10. Do not print the API key in status messages, command transcripts, or final notes.
 ```
 
 ## Notes

@@ -1,6 +1,6 @@
 # App Fuel Response Fields
 
-The API returns compact agent-facing objects, not raw database rows. Read `/agent/schema/`, `/agent/schema/ads/`, `/agent/schema/reels/`, `/agent/schema/apps/`, `/agent/schema/collections/`, or `/agent/openapi.json/` for the latest contract.
+The API returns compact agent-facing objects, not raw database rows. Read `/agent/schema`, `/agent/schema/ads`, `/agent/schema/reels`, `/agent/schema/apps`, `/agent/schema/collections`, or `/agent/openapi.json` for the latest contract.
 
 Top-level search response fields:
 
