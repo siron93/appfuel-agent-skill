@@ -18,11 +18,13 @@ For endpoint, request, and returned-field details, read `references/endpoints.md
 3. Use `search_apps` for app discovery, competitor discovery, audiences, categories, jobs-to-be-done, and product concepts.
 4. Use `app_detail` when the user asks about one app's revenue, rankings, intelligence, similar apps, or ad/reel entry points.
 5. Use `search_ads` for paid ad questions and `search_reels` for organic content questions.
-6. Extract explicit filters first: category, active status, app ids, media type, revenue, people labels, hook types, duration, grouping, dates, sorting, and pagination.
-7. Put only the actual creative-content constraint in `query`, such as visible UI, hook/copy, scene, claim, offer, pain point, product moment, or reel mechanic.
-8. Ask for `return_view=true` when visual inspection matters or when the user wants examples.
-9. Return the `view_url` when present.
-10. Use `list_collections`, `create_collection`, `update_collection`, `save_item`, and `save_filter` when the user wants to save, organize, share, or revisit research.
+6. Use `ad_detail` when the user asks to inspect, explain, or extract details from one paid ad returned by search.
+7. Use `similar_ads` when the user asks for more paid creatives like a specific ad.
+8. Extract explicit filters first: category, active status, app ids, media type, revenue, people labels, hook types, duration, grouping, dates, sorting, and pagination.
+9. Put only the actual creative-content constraint in `query`, such as visible UI, hook/copy, scene, claim, offer, pain point, product moment, or reel mechanic.
+10. Ask for `return_view=true` when visual inspection matters or when the user wants examples.
+11. Return the `view_url` when present.
+12. Use `list_collections`, `create_collection`, `update_collection`, `save_item`, and `save_filter` when the user wants to save, organize, share, or revisit research.
 
 For revenue-band requests such as "apps doing 20k a month and running ads", use `min_app_revenue` and `max_app_revenue` tool arguments or filters. For "around 20k", start with a narrow band such as 15000-30000; for "20k+" use `min_app_revenue=20000` and add `max_app_revenue` when the user asks for smaller apps or a tight band. Do not inspect local config files or credentials to discover hidden API options; use schema tools and documented filters.
 
@@ -106,6 +108,12 @@ For requests like "fitness apps running ads that show a male presenter explainin
 - Use `query="meal plan explanation"` for the creative-content part.
 
 People labels are AI creative-content labels. Describe them as "male-presenting/female-presenting creative labels" or "detected people mix"; do not imply identity recognition.
+
+For one paid ad selected from results:
+
+- Use `ad_detail` with `creative_key` when the user wants the full creative snapshot, media, app context, or AI analysis for that ad.
+- Use `similar_ads` with `creative_key` when the user wants more creatives like that ad.
+- Use `ad_id` only when `creative_key` is not available.
 
 For app-specific ad or reel research:
 

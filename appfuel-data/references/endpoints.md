@@ -31,6 +31,8 @@ Protected endpoints:
 - `POST /agent/apps/search/`: app discovery by name, category, audience, job-to-be-done, competitor set, or product concept.
 - `POST /agent/apps/detail/`: one app's metadata, intelligence, revenue series, latest rankings, similar apps, and App Fuel gallery entry points.
 - `POST /agent/ads/search/`: enriched paid ad search.
+- `POST /agent/ads/detail/`: detailed paid ad creative snapshot, media, app context, and sanitized AI analysis.
+- `POST /agent/ads/similar/`: similar paid ad creatives from one source creative.
 - `POST /agent/reels/search/`: enriched organic Instagram Reels search.
 - `POST /agent/collections/list/`: saved collections, items, filters, and pagination.
 - `POST /agent/collections/create/`: create or reuse a saved collection.
@@ -63,6 +65,26 @@ Paid ads request:
   "ads_per_app": 8,
   "group_by": "app",
   "return_view": true
+}
+```
+
+Paid ad detail request:
+
+```json
+{
+  "creative_key": "creative-key-from-search",
+  "include_analysis": true
+}
+```
+
+Similar ads request:
+
+```json
+{
+  "creative_key": "creative-key-from-search",
+  "limit": 12,
+  "strategy": "hybrid",
+  "exclude_same_app": true
 }
 ```
 
@@ -120,6 +142,7 @@ Query rule:
 - To search exact hook wording only, set `search_scope="hook"` with `query`. Use the default `search_scope="ai"` for broader creative/content matching.
 - For "find Health & Fitness apps running ads", use `query=""`, `filters.category="HEALTH_AND_FITNESS"`, `filters.active_status="active"`, and `group_by="app"`.
 - For one or more specific apps, use `include_app_ids` with App Fuel app ids from `search_apps` or `app_detail`. For paid ads, use `exclude_app_ids` to remove known apps from a market scan.
+- For one specific paid ad, use `ad_detail` with `creative_key` from search results. Use `similar_ads` with that same key when the user wants more creatives like it.
 
 Common ads filters include `category`, `active_status`, `include_app_ids`, `exclude_app_ids`, `media_type`, `people_gender`, `people_role`, `people_age_range`, `creative_format`, `production_quality`, `language`, `cut_speed`, `pain_intensity`, `hook_type`, `search_scope`, `min_run_days`, `max_run_days`, `min_video_duration_seconds`, `max_video_duration_seconds`, `web_funnel`, `min_app_revenue`, `max_app_revenue`, `min_radar_average`, `radar_mins`, `sort`, and `explore_seed`.
 

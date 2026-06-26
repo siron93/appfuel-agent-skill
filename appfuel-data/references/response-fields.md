@@ -27,6 +27,24 @@ Paid ad result fields:
 - `evidence.creative_ai.hook_type`, `evidence.creative_ai.creative_formats`, `evidence.creative_ai.production_quality`, `evidence.creative_ai.cut_speed`, `evidence.creative_ai.pain_intensity`, `evidence.creative_ai.radar_average`
 - `evidence.text.main_claim`, `evidence.text.strategy_summary`, `evidence.text.visual_description`, `evidence.text.ocr_text`
 
+Paid ad detail fields:
+
+- `creative_key`, `ad_id`
+- `summary`: same compact shape as a paid ad search result.
+- `detail.app`: app context attached to the creative.
+- `detail.ad`: status, timing, duration, variant, usage, platform, and destination context.
+- `detail.creative`: title, body text, caption, CTA, and media items.
+- `detail.analysis`: sanitized AI analysis when `include_analysis=true`.
+- `view_url`: App Fuel gallery entry point for the app when available.
+
+Similar paid ad fields:
+
+- `source_creative_key`
+- `similar_ads`: cross-app or best matching creatives with the paid ad result shape plus `similarity`.
+- `own_app_variants`: same-app variants when available.
+- `method`: similarity strategy metadata.
+- `query`: normalized similar-ad request settings.
+
 Organic reel result fields:
 
 - `reel_id`
