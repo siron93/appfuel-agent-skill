@@ -22,10 +22,11 @@ Paid ad result fields:
 - `creative_key`: App Fuel creative dedupe key.
 - `app.id`, `app.name`, `app.category`, `app.icon_url`, `app.latest_revenue`
 - `ad.is_active`, `ad.media_type`, `ad.first_seen_at`, `ad.last_seen_at`, `ad.flight_days`, `ad.variants_count`
-- `creative.title`, `creative.body_text`, `creative.cta_text`, `creative.thumbnail_url`, `creative.media_url`
+- `creative.title`, `creative.body_text`, `creative.description`, `creative.hook_text`, `creative.hook_type`, `creative.cta_text`, `creative.thumbnail_url`, `creative.media_url`
+- `overview.hook_text`, `overview.hook_type`, `overview.hook_source`, `overview.main_claim`, `overview.value_proposition`, `overview.pain_points`, `overview.target_personas`, `overview.cta_phrases`, `overview.offer`, `overview.strategy_summary`, `overview.angles`, `overview.ad_description`, `overview.ad_structure`
 - `evidence.people.roles`, `evidence.people.genders`, `evidence.people.age_ranges`, `evidence.people.main_people`, `evidence.people.label_note`
-- `evidence.creative_ai.hook_type`, `evidence.creative_ai.creative_formats`, `evidence.creative_ai.production_quality`, `evidence.creative_ai.cut_speed`, `evidence.creative_ai.pain_intensity`, `evidence.creative_ai.radar_average`
-- `evidence.text.main_claim`, `evidence.text.strategy_summary`, `evidence.text.visual_description`, `evidence.text.ocr_text`
+- `evidence.creative_ai.hook_text`, `evidence.creative_ai.hook_type`, `evidence.creative_ai.hook_source`, `evidence.creative_ai.written_hook`, `evidence.creative_ai.spoken_hook`, `evidence.creative_ai.creative_formats`, `evidence.creative_ai.production_quality`, `evidence.creative_ai.cut_speed`, `evidence.creative_ai.pain_intensity`, `evidence.creative_ai.radar_average`, `evidence.creative_ai.ad_structure`, `evidence.creative_ai.scene_count`
+- `evidence.text.main_claim`, `evidence.text.value_proposition`, `evidence.text.pain_points`, `evidence.text.target_personas`, `evidence.text.cta_phrases`, `evidence.text.proof_or_credibility_signals`, `evidence.text.strategy_summary`, `evidence.text.angles`, `evidence.text.awareness_stage`, `evidence.text.offer_or_incentive`, `evidence.text.offer`, `evidence.text.pain_point`, `evidence.text.visual_description`, `evidence.text.spoken_transcript`, `evidence.text.ocr_text`
 
 Paid ad detail fields:
 

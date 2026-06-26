@@ -141,6 +141,7 @@ Query rule:
 - Put category, active/running status, app ids, account type, media type, hook type, video duration, dates, revenue, engagement, grouping, sorting, and pagination in filters or typed arguments.
 - To search exact hook wording only, set `search_scope="hook"` with `query`. Use the default `search_scope="ai"` for broader creative/content matching.
 - For "find Health & Fitness apps running ads", use `query=""`, `filters.category="HEALTH_AND_FITNESS"`, `filters.active_status="active"`, and `group_by="app"`.
+- Paid ad search results include `overview` for immediate interpretation: hook, claim, value proposition, pain points, target personas, offer, strategy, ad description, and structure.
 - For one or more specific apps, use `include_app_ids` with App Fuel app ids from `search_apps` or `app_detail`. For paid ads, use `exclude_app_ids` to remove known apps from a market scan.
 - For one specific paid ad, use `ad_detail` with `creative_key` from search results. Use `similar_ads` with that same key when the user wants more creatives like it.
 

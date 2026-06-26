@@ -72,6 +72,8 @@ If MCP tools do not reload in the current thread after configuration, ask the us
 
 ## Search Guidance
 
+For paid ad search results, read each result's `overview` first. It gives the hook, hook type/source, main claim, value proposition, pain points, target personas, offer, strategy summary, ad description, and structure without needing a detail call. Use `ad_detail` only when the user selects one ad or asks for deeper single-ad analysis.
+
 For requests like "Find Health & Fitness apps that are running ads":
 
 - Use `category="fitness"` or `category="HEALTH_AND_FITNESS"`.
