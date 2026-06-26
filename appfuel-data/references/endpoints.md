@@ -116,13 +116,14 @@ Update collection visibility request:
 Query rule:
 
 - Use `query` only for creative content inside ads or reels: scenes, hooks, claims, offers, visible UI, captions, transcripts, pain points, creator mechanics, or product moments.
-- Put category, active/running status, account type, media type, hook type, video duration, dates, revenue, engagement, grouping, sorting, and pagination in filters or typed arguments.
+- Put category, active/running status, app ids, account type, media type, hook type, video duration, dates, revenue, engagement, grouping, sorting, and pagination in filters or typed arguments.
 - To search exact hook wording only, set `search_scope="hook"` with `query`. Use the default `search_scope="ai"` for broader creative/content matching.
 - For "find Health & Fitness apps running ads", use `query=""`, `filters.category="HEALTH_AND_FITNESS"`, `filters.active_status="active"`, and `group_by="app"`.
+- For one or more specific apps, use `include_app_ids` with App Fuel app ids from `search_apps` or `app_detail`. For paid ads, use `exclude_app_ids` to remove known apps from a market scan.
 
-Common ads filters include `category`, `active_status`, `media_type`, `people_gender`, `people_role`, `creative_format`, `production_quality`, `language`, `hook_type`, `search_scope`, `min_run_days`, `max_run_days`, `min_video_duration_seconds`, `max_video_duration_seconds`, `web_funnel`, `min_app_revenue`, `max_app_revenue`, `min_radar_average`, and `sort`.
+Common ads filters include `category`, `active_status`, `include_app_ids`, `exclude_app_ids`, `media_type`, `people_gender`, `people_role`, `people_age_range`, `creative_format`, `production_quality`, `language`, `cut_speed`, `pain_intensity`, `hook_type`, `search_scope`, `min_run_days`, `max_run_days`, `min_video_duration_seconds`, `max_video_duration_seconds`, `web_funnel`, `min_app_revenue`, `max_app_revenue`, `min_radar_average`, `radar_mins`, `sort`, and `explore_seed`.
 
-Common reels filters include `category`, `account_type`, `language`, `hook_type`, `people_gender`, `people_age_range`, `ui_context`, `creator_mode`, `dominant_emotion`, `min_views`, `min_likes`, `min_comments`, `min_video_duration_seconds`, `max_video_duration_seconds`, `min_app_revenue`, `max_app_revenue`, `date_start`, `date_end`, `sort`, and `search_scope`.
+Common reels filters include `category`, `account_type`, `include_app_ids`, `language`, `hook_type`, `people_gender`, `people_age_range`, `ui_context`, `creator_mode`, `dominant_emotion`, `min_views`, `min_likes`, `min_comments`, `min_video_duration_seconds`, `max_video_duration_seconds`, `min_app_revenue`, `max_app_revenue`, `date_start`, `date_end`, `app_release_start`, `app_release_end`, `sort`, and `search_scope`.
 
 Pagination:
 

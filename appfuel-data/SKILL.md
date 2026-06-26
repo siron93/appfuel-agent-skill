@@ -7,7 +7,7 @@ description: Use App Fuel enriched app, paid ad, organic reel, and saved researc
 
 Use the App Fuel MCP tools for questions about apps, competitors, paid ads, organic reels, creative patterns, revenue-filtered markets, and saved App Fuel research.
 
-Important: `query` is only for creative/content search inside ads or reels. Do not put app category, market, active/running status, media type, dates, revenue, grouping, sorting, or pagination into `query`; send those as explicit tool filters or typed arguments. If the user only asks for an app/category/status list and gives no creative-content constraint, pass `query=""`.
+Important: `query` is only for creative/content search inside ads or reels. Do not put app category, app id, market, active/running status, media type, dates, revenue, grouping, sorting, or pagination into `query`; send those as explicit tool filters or typed arguments. If the user only asks for an app/category/status list and gives no creative-content constraint, pass `query=""`.
 
 For endpoint, request, and returned-field details, read `references/endpoints.md` and `references/response-fields.md`. Prefer the live schema tools when available, because the API contract can add fields over time.
 
@@ -18,7 +18,7 @@ For endpoint, request, and returned-field details, read `references/endpoints.md
 3. Use `search_apps` for app discovery, competitor discovery, audiences, categories, jobs-to-be-done, and product concepts.
 4. Use `app_detail` when the user asks about one app's revenue, rankings, intelligence, similar apps, or ad/reel entry points.
 5. Use `search_ads` for paid ad questions and `search_reels` for organic content questions.
-6. Extract explicit filters first: category, active status, media type, revenue, people labels, hook types, duration, grouping, dates, sorting, and pagination.
+6. Extract explicit filters first: category, active status, app ids, media type, revenue, people labels, hook types, duration, grouping, dates, sorting, and pagination.
 7. Put only the actual creative-content constraint in `query`, such as visible UI, hook/copy, scene, claim, offer, pain point, product moment, or reel mechanic.
 8. Ask for `return_view=true` when visual inspection matters or when the user wants examples.
 9. Return the `view_url` when present.
@@ -106,6 +106,14 @@ For requests like "fitness apps running ads that show a male presenter explainin
 - Use `query="meal plan explanation"` for the creative-content part.
 
 People labels are AI creative-content labels. Describe them as "male-presenting/female-presenting creative labels" or "detected people mix"; do not imply identity recognition.
+
+For app-specific ad or reel research:
+
+- Use `search_apps` when the app id is unknown.
+- Use `app_detail` when one app has been selected and the user needs context or gallery entry points.
+- Use `include_app_ids` with `search_ads` or `search_reels` to restrict results to specific apps.
+- Use `exclude_app_ids` with `search_ads` when the user wants to remove known apps from a market scan.
+- Keep app ids out of `query`.
 
 For hook and duration requests:
 
