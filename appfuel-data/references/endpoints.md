@@ -9,9 +9,10 @@ https://new.theappfuel.com/api/elite/v1/elite
 Authentication:
 
 - Public documentation endpoints do not require authentication.
-- Search, app detail, usage, and saved research endpoints require an App Fuel API key.
-- Send the key as `Authorization: Bearer $APPFUEL_API_KEY` or `X-Elite-Agent-Key: $APPFUEL_API_KEY`.
-- If a protected endpoint returns `{"detail":"Agent authentication credentials were not provided."}`, create/configure an App Fuel API key and retry.
+- Search, app detail, usage, and saved research endpoints require an authenticated App Fuel connection.
+- Prefer hosted MCP OAuth. Remote MCP clients discover OAuth through `/.well-known/oauth-protected-resource` and `/.well-known/oauth-authorization-server`.
+- API-key bearer auth remains available as a fallback for REST tests and MCP clients that do not support OAuth.
+- If a protected endpoint returns `{"detail":"Agent authentication credentials were not provided."}`, complete the MCP OAuth login or configure a fallback API key and retry.
 
 Public endpoints:
 
@@ -24,6 +25,10 @@ Public endpoints:
 - `GET /agent/schema/collections`: saved research operations.
 - `GET /mcp/connection`: hosted MCP connection snippets.
 - `GET|POST /mcp`: hosted Streamable HTTP MCP endpoint. Use this as the default agent connection.
+- `GET /.well-known/oauth-protected-resource`: MCP protected resource metadata.
+- `GET /.well-known/oauth-authorization-server`: OAuth authorization server metadata.
+- `POST /oauth/register`: dynamic OAuth client registration for MCP clients.
+- `POST /oauth/token`: authorization-code or refresh-token exchange for MCP clients.
 
 Protected endpoints:
 

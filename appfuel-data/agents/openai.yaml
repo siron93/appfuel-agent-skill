@@ -8,7 +8,7 @@ dependencies:
   tools:
     - type: "mcp"
       value: "appfuel-data"
-      description: "Local App Fuel MCP server configured with an App Fuel API key"
+      description: "Hosted App Fuel MCP server authenticated with OAuth browser login"
 
 policy:
   allow_implicit_invocation: true

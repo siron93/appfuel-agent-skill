@@ -18,8 +18,6 @@ appfuel-agent-skill
 
 ## Hosted MCP
 
-First create an App Fuel API key in the App Fuel app under `/api`.
-
 Use the hosted Streamable HTTP MCP server:
 
 ```text
@@ -29,24 +27,15 @@ https://new.theappfuel.com/api/elite/v1/elite/mcp
 Codex:
 
 ```bash
-printf "App Fuel API key: "
-stty -echo
-IFS= read -r APPFUEL_API_KEY
-stty echo
-printf "\n"
-launchctl setenv APPFUEL_API_KEY "$APPFUEL_API_KEY"
-codex mcp add appfuel-data --url 'https://new.theappfuel.com/api/elite/v1/elite/mcp' --bearer-token-env-var APPFUEL_API_KEY
+codex mcp add appfuel-data --url 'https://new.theappfuel.com/api/elite/v1/elite/mcp'
+codex mcp login appfuel-data
 ```
 
 Claude Code:
 
 ```bash
-printf "App Fuel API key: "
-stty -echo
-IFS= read -r APPFUEL_API_KEY
-stty echo
-printf "\n"
-claude mcp add --transport http appfuel-data 'https://new.theappfuel.com/api/elite/v1/elite/mcp' --header "Authorization: Bearer $APPFUEL_API_KEY" --scope user
+claude mcp add --transport http appfuel-data 'https://new.theappfuel.com/api/elite/v1/elite/mcp' --scope user
+claude mcp login appfuel-data
 ```
 
 Cursor or other MCP clients:
@@ -55,14 +44,13 @@ Cursor or other MCP clients:
 {
   "mcpServers": {
     "appfuel-data": {
-      "url": "https://new.theappfuel.com/api/elite/v1/elite/mcp",
-      "headers": {
-        "Authorization": "Bearer ${env:APPFUEL_API_KEY}"
-      }
+      "url": "https://new.theappfuel.com/api/elite/v1/elite/mcp"
     }
   }
 }
 ```
+
+When the client asks for authorization, approve App Fuel in the browser. API keys remain available in the App Fuel `/api` page for REST tests and fallback clients that do not support remote MCP OAuth.
 
 ## Codex Skill
 
@@ -97,20 +85,21 @@ Agent instructions: https://new.theappfuel.com/api/elite/v1/elite/agent/instruct
 OpenAPI spec: https://new.theappfuel.com/api/elite/v1/elite/agent/openapi.json
 Agent schema: https://new.theappfuel.com/api/elite/v1/elite/agent/schema
 Hosted MCP URL: https://new.theappfuel.com/api/elite/v1/elite/mcp
+OAuth metadata: https://new.theappfuel.com/api/elite/v1/elite/.well-known/oauth-authorization-server
 Skill source: https://github.com/siron93/appfuel-agent-skill/tree/main/appfuel-data
-API key: keep it local as APPFUEL_API_KEY. Do not paste or print the key in chat.
 
 Before answering App Fuel questions:
 1. For Codex, install the skill with: Use $skill-installer to install appfuel-data from https://github.com/siron93/appfuel-agent-skill/tree/main/appfuel-data
 2. Read the agent instructions URL and use the OpenAPI/schema URLs to discover current endpoints and filters.
-3. If App Fuel MCP tools are available, use them instead of raw HTTP.
-4. If the current session cannot see the hosted MCP server after configuration, say that a new agent session or MCP client restart/refresh is needed.
-5. Use query only for creative/content search inside ads or reels. Put category, running status, dates, grouping, and sorting in filters.
-6. Use pagination.next_request when a response has more results.
-7. Return view_url links when present so the user can inspect the matching creative gallery.
-8. Use collection tools when the user asks to save or organize research.
-9. Do not ask the user to paste the API key into chat. If APPFUEL_API_KEY is missing, ask the user to run the secure local setup command themselves.
-10. Do not print the API key in status messages, command transcripts, or final notes.
+3. If the MCP client asks for authorization, open the browser login and approve App Fuel.
+4. If App Fuel MCP tools are available, use them instead of raw HTTP.
+5. If the current session cannot see the hosted MCP server after configuration, say that a new agent session or MCP client restart/refresh is needed.
+6. Use query only for creative/content search inside ads or reels. Put category, running status, dates, grouping, and sorting in filters.
+7. Use pagination.next_request when a response has more results.
+8. Return view_url links when present so the user can inspect the matching creative gallery.
+9. Use collection tools when the user asks to save or organize research.
+10. Do not ask the user to paste an App Fuel API key into chat. If OAuth is unavailable, ask the user to use the API-key fallback from the App Fuel API page.
+11. Do not print OAuth tokens, API keys, authorization codes, or refresh tokens in status messages, command transcripts, or final notes.
 ```
 
 ## Notes

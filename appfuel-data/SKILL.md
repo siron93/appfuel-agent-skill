@@ -28,7 +28,7 @@ For endpoint, request, and returned-field details, read `references/endpoints.md
 
 For revenue-band requests such as "apps doing 20k a month and running ads", use `min_app_revenue` and `max_app_revenue` tool arguments or filters. For "around 20k", start with a narrow band such as 15000-30000; for "20k+" use `min_app_revenue=20000` and add `max_app_revenue` when the user asks for smaller apps or a tight band. Do not inspect local config files or credentials to discover hidden API options; use schema tools and documented filters.
 
-Schema tools are public documentation surfaces. Search, app detail, usage, and saved research tools require an App Fuel API key. If the backend returns "Agent authentication credentials were not provided", tell the user to create a key in App Fuel's `/api` section and configure the hosted MCP server with that key.
+Schema tools are public documentation surfaces. Search, app detail, usage, and saved research tools require an authenticated App Fuel connection. Prefer hosted MCP with OAuth browser login. If a client does not support OAuth for remote MCP, use the API-key fallback from App Fuel's `/api` section.
 
 The hosted instruction document lives at `https://new.theappfuel.com/api/elite/v1/elite/agent/instructions.md` for clients that can fetch plain Markdown but do not support Codex skills.
 
@@ -43,24 +43,15 @@ https://new.theappfuel.com/api/elite/v1/elite/mcp
 Codex:
 
 ```bash
-printf "App Fuel API key: "
-stty -echo
-IFS= read -r APPFUEL_API_KEY
-stty echo
-printf "\n"
-launchctl setenv APPFUEL_API_KEY "$APPFUEL_API_KEY"
-codex mcp add appfuel-data --url 'https://new.theappfuel.com/api/elite/v1/elite/mcp' --bearer-token-env-var APPFUEL_API_KEY
+codex mcp add appfuel-data --url 'https://new.theappfuel.com/api/elite/v1/elite/mcp'
+codex mcp login appfuel-data
 ```
 
 Claude Code:
 
 ```bash
-printf "App Fuel API key: "
-stty -echo
-IFS= read -r APPFUEL_API_KEY
-stty echo
-printf "\n"
-claude mcp add --transport http appfuel-data 'https://new.theappfuel.com/api/elite/v1/elite/mcp' --header "Authorization: Bearer $APPFUEL_API_KEY" --scope user
+claude mcp add --transport http appfuel-data 'https://new.theappfuel.com/api/elite/v1/elite/mcp' --scope user
+claude mcp login appfuel-data
 ```
 
 Cursor or other MCP clients:
@@ -69,16 +60,13 @@ Cursor or other MCP clients:
 {
   "mcpServers": {
     "appfuel-data": {
-      "url": "https://new.theappfuel.com/api/elite/v1/elite/mcp",
-      "headers": {
-        "Authorization": "Bearer ${env:APPFUEL_API_KEY}"
-      }
+      "url": "https://new.theappfuel.com/api/elite/v1/elite/mcp"
     }
   }
 }
 ```
 
-Keep the API key local. Do not paste it into chat or print it in command output; if a key was exposed in logs or a transcript, revoke it and create a replacement key.
+When the MCP client asks for authorization, open the browser login and approve App Fuel. Do not print OAuth tokens, API keys, authorization codes, or refresh tokens in status messages, command transcripts, or final notes.
 
 If MCP tools do not reload in the current thread after configuration, ask the user to open a new session or restart/refresh the MCP client.
 
