@@ -1,6 +1,6 @@
 # App Fuel Response Fields
 
-The API returns compact agent-facing objects, not raw database rows. Read `/agent/schema`, `/agent/schema/ads`, `/agent/schema/reels`, `/agent/schema/apps`, `/agent/schema/collections`, or `/agent/openapi.json` for the latest contract.
+The API returns compact agent-facing objects, not raw database rows. Read `/agent/schema`, `/agent/schema/ads`, `/agent/schema/reels`, `/agent/schema/apps`, `/agent/schema/collections`, `/agent/schema/canvases`, or `/agent/openapi.json` for the latest contract.
 
 Top-level search response fields:
 
@@ -9,6 +9,7 @@ Top-level search response fields:
 - `summary`
 - `view_url`: shareable App Fuel gallery URL when `return_view=true`; otherwise `null`.
 - `query.input`
+- `query.queries`: normalized creative-content alternatives when `query` was sent as an array.
 - `query.normalized_filters`
 - `query.search_mode`
 - `kpis`
@@ -18,8 +19,9 @@ Top-level search response fields:
 
 Paid ad result fields:
 
+- `public_id`: opaque public paid-ad id for URLs, canvases, and save-item, for example `ad_09dad398629428b7d984`.
 - `ad_id`: representative paid ad archive id.
-- `creative_key`: App Fuel creative dedupe key.
+- `creative_key`: internal App Fuel creative dedupe key, kept as fallback/detail context.
 - `app.id`, `app.name`, `app.category`, `app.icon_url`, `app.latest_revenue`
 - `ad.is_active`, `ad.media_type`, `ad.first_seen_at`, `ad.last_seen_at`, `ad.flight_days`, `ad.variants_count`
 - `creative.title`, `creative.body_text`, `creative.description`, `creative.hook_text`, `creative.hook_type`, `creative.cta_text`, `creative.thumbnail_url`, `creative.media_url`
@@ -30,7 +32,7 @@ Paid ad result fields:
 
 Paid ad detail fields:
 
-- `creative_key`, `ad_id`
+- `public_id`, `creative_key`, `ad_id`
 - `summary`: same compact shape as a paid ad search result.
 - `detail.app`: app context attached to the creative.
 - `detail.ad`: status, timing, duration, variant, usage, platform, and destination context.
@@ -48,7 +50,8 @@ Similar paid ad fields:
 
 Organic reel result fields:
 
-- `reel_id`
+- `public_id`: opaque public organic reel id for URLs, canvases, and save-item, for example `reel_8080198d0b44ab81e6c5`.
+- `reel_id`: internal Instagram reel id, kept as fallback/detail context.
 - `app.id`, `app.name`, `app.category`, `app.icon_url`, `app.latest_revenue`
 - `organic.instagram_username`, `organic.account_type`, `organic.permalink`, `organic.posted_at`, `organic.views`, `organic.likes`, `organic.comments`
 - `creative.title`, `creative.caption_text`, `creative.music_title`, `creative.music_artist`, `creative.video_duration`, `creative.thumbnail_url`, `creative.video_url`
@@ -61,6 +64,7 @@ App search and app detail fields:
 - `app.id`, `app.name`, `app.subtitle`, `app.seller`, `app.categories`
 - `app.icon_url`, `app.rating_average`, `app.rating_count`, `app.release_date`
 - `app.latest_revenue`, `app.latest_revenue_month`
+- `app.match`: app semantic match metadata when app_product_query was used, including product query, score, rank, and combined score.
 - `app.store_links.ios`, `app.store_links.android`
 - `app.social.instagram_username`, `app.social.has_instagram_reels`
 - `app.intelligence.oneLiner`
@@ -86,6 +90,21 @@ Saved research fields:
 - `filters`: saved filter views with surface, name, description, filters, summary, and timestamps.
 - `kpis`: saved item/filter counts, collected-item count, and collection item limit.
 - `pagination`: item pagination and `next_request` when more saved items are available.
+
+Research canvas fields:
+
+- `canvas.id`, `canvas.name`, `canvas.description`
+- `canvas.shareId`, `canvas.isPublic`
+- `canvas.workspaceUrl`: signed-in owner workspace link.
+- `canvas.url`: public read-only share link when `isPublic=true`.
+- `canvas.viewport.x`, `canvas.viewport.y`, `canvas.viewport.zoom`
+- `canvas.nodes`: media/video/image/label/app/ad/reel nodes with id, type, x, y, width, height, title, description, media URL, thumbnail URL, source type/id, optional group id, and metadata.
+- `canvas.groups`: group rectangles with id, title, x, y, width, height, color, and optional item ids.
+- `canvas.edges`: arrows with id, from node id, to node id, optional label, and optional color.
+- `canvas.nodeCount`, `canvas.groupCount`, `canvas.edgeCount`
+- `canvas.createdAt`, `canvas.updatedAt`
+
+Canvas list responses include `canvases` and `pagination`. Use `pagination.next_request` when present. Canvas create/get/update responses wrap one canvas in `canvas`.
 
 Missing values can be `null`, empty arrays, or absent. People labels are creative-content labels, not identity recognition.
 

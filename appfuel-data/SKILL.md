@@ -1,30 +1,36 @@
 ---
 name: appfuel-data
-description: Use App Fuel enriched app, paid ad, organic reel, and saved research intelligence through the App Fuel MCP tools. Trigger when a user asks for app market research, app discovery, competitor lists, paid ad examples, organic content examples, creative patterns, revenue-filtered app research, or saved App Fuel research collections.
+version: 2026-06-30.agent-guide.3
+description: Use App Fuel enriched app, paid ad, organic reel, and saved research intelligence through the App Fuel MCP tools. Trigger when a user asks for app market research, app discovery, competitor lists, paid ad examples, organic content examples, creative patterns, revenue-filtered app research, saved App Fuel research collections, or visual research canvases.
 ---
 
 # App Fuel Data
 
-Use the App Fuel MCP tools for questions about apps, competitors, paid ads, organic reels, creative patterns, revenue-filtered markets, and saved App Fuel research.
+Use the App Fuel MCP tools for questions about apps, competitors, paid ads, organic reels, creative patterns, revenue-filtered markets, saved App Fuel research, and visual research canvases.
 
-Important: `query` is only for creative/content search inside ads or reels. Do not put app category, app id, market, active/running status, media type, dates, revenue, grouping, sorting, or pagination into `query`; send those as explicit tool filters or typed arguments. If the user only asks for an app/category/status list and gives no creative-content constraint, pass `query=""`.
+Important: `query` searches the whole AI creative/content profile inside ads or reels. It can be a string for one idea or a string array for 2-8 focused alternatives. It is not a hook-only or field-specific embedding search. Do not put app category, app id, market, app product concept, active/running status, media type, dates, revenue, grouping, sorting, or pagination into `query`; send those as explicit tool filters or typed arguments. If the user only asks for an app/category/status list and gives no creative-content constraint, pass `query=""`.
 
-For endpoint, request, and returned-field details, read `references/endpoints.md` and `references/response-fields.md`. Prefer the live schema tools when available, because the API contract can add fields over time.
+For app-level semantic matching, use `app_product_query` for the full app intelligence/profile: what the app does, product category, job-to-be-done, or app description, such as `app_product_query="photo and video editing apps"`. It is not a separate hook-only, positioning-only, or field-specific app embedding. If the product query already scopes the market, do not add a broad category filter unless the user explicitly asks for that category.
+
+For endpoint, request, and returned-field details, read `references/endpoints.md` and `references/response-fields.md`. For visual board layout, node state, groups, arrows, html insight nodes, and snapshots, read `references/canvases.md` before creating or updating canvases. Prefer the live schema tools when available, because the API contract can add fields over time. If MCP is connected and this installed skill might be stale, call `get_agent_instructions`; if the hosted guide disagrees with this local skill, follow the hosted guide.
 
 ## Workflow
 
-1. Call `describe_agent_schema` when you need the full current surface.
-2. Call `describe_ads_schema`, `describe_reels_schema`, `describe_apps_schema`, or `describe_collections_schema` before guessing filters or fields.
-3. Use `search_apps` for app discovery, competitor discovery, audiences, categories, jobs-to-be-done, and product concepts.
-4. Use `app_detail` when the user asks about one app's revenue, rankings, intelligence, similar apps, or ad/reel entry points.
-5. Use `search_ads` for paid ad questions and `search_reels` for organic content questions.
-6. Use `ad_detail` when the user asks to inspect, explain, or extract details from one paid ad returned by search.
-7. Use `similar_ads` when the user asks for more paid creatives like a specific ad.
-8. Extract explicit filters first: category, active status, app ids, media type, revenue, people labels, hook types, duration, grouping, dates, sorting, and pagination.
-9. Put only the actual creative-content constraint in `query`, such as visible UI, hook/copy, scene, claim, offer, pain point, product moment, or reel mechanic.
-10. Ask for `return_view=true` when visual inspection matters or when the user wants examples.
-11. Return the `view_url` when present.
-12. Use `list_collections`, `create_collection`, `update_collection`, `save_item`, and `save_filter` when the user wants to save, organize, share, or revisit research.
+1. Call `get_agent_instructions` when local skill guidance may be stale or when tool behavior and local instructions disagree.
+2. Call `describe_agent_schema` when you need the full current surface.
+3. Call `describe_ads_schema`, `describe_reels_schema`, `describe_apps_schema`, `describe_collections_schema`, or `describe_canvases_schema` before guessing filters or fields.
+4. Use `search_apps` for app discovery, competitor discovery, audiences, categories, jobs-to-be-done, and product concepts.
+5. Use `app_detail` when the user asks about one app's revenue, rankings, intelligence, similar apps, or ad/reel entry points.
+6. Use `search_ads` for paid ad questions and `search_reels` for organic content questions.
+7. Use `ad_detail` when the user asks to inspect, explain, or extract details from one paid ad returned by search.
+8. Use `similar_ads` when the user asks for more paid creatives like a specific ad.
+9. Extract explicit filters first: category, active status, app ids, media type, revenue, people labels, hook types, duration, grouping, dates, sorting, and pagination.
+10. Put only the actual creative-content constraint in `query`, such as visible UI, scene, claim, offer, pain point, product moment, reel mechanic, or hook-like wording inside the full creative profile.
+11. Send `query` as a string array for 2-8 focused creative-content alternatives when one user request naturally contains several concepts.
+12. Ask for `return_view=true` when visual inspection matters or when the user wants examples.
+13. Return the `view_url` when present.
+14. Use `list_collections`, `create_collection`, `update_collection`, and `save_item` when the user wants to save, organize, share, or revisit research.
+15. Use `list_canvases`, `create_canvas`, `get_canvas`, `update_canvas`, and `get_canvas_snapshot` when the user wants a visual board, mapped findings, grouped examples, arrows, visual inspection, or a link to a research workspace.
 
 For revenue-band requests such as "apps doing 20k a month and running ads", use `min_app_revenue` and `max_app_revenue` tool arguments or filters. For "around 20k", start with a narrow band such as 15000-30000; for "20k+" use `min_app_revenue=20000` and add `max_app_revenue` when the user asks for smaller apps or a tight band. Do not inspect local config files or credentials to discover hidden API options; use schema tools and documented filters.
 
@@ -79,7 +85,7 @@ For requests like "Find Health & Fitness apps that are running ads":
 - Use `category="fitness"` or `category="HEALTH_AND_FITNESS"`.
 - Use `active_status="active"` when the wording implies currently showing/running ads.
 - Use `group_by_app=true` when the user asks for apps rather than individual creatives.
-- Use `limit=30` unless the user asks for a different page size.
+- Use `limit=20` for grouped app pages unless the user asks for fewer apps.
 - Use `query=""` because there is no creative-content search term.
 
 Correct:
@@ -90,7 +96,7 @@ Correct:
   "category": "HEALTH_AND_FITNESS",
   "active_status": "active",
   "group_by_app": true,
-  "limit": 30
+  "limit": 20
 }
 ```
 
@@ -102,6 +108,25 @@ Incorrect:
 }
 ```
 
+For requests like "find active ads with travel features from photo and video editing apps":
+
+- Use `query="travel features"` for the creative-content constraint.
+- Use `app_product_query="photo and video editing apps"` for the app/product constraint.
+- Use `active_status="active"` for currently running ads.
+- Do not add a broad category filter unless the user asked for that category; the product query already scopes the app market.
+
+```json
+{
+  "query": "travel features",
+  "filters": {
+    "app_product_query": "photo and video editing apps",
+    "active_status": "active"
+  },
+  "group_by_app": true,
+  "limit": 20
+}
+```
+
 For requests like "fitness apps running ads that show a male presenter explaining a meal plan":
 
 - Use `category="HEALTH_AND_FITNESS"`.
@@ -109,12 +134,25 @@ For requests like "fitness apps running ads that show a male presenter explainin
 - Use `people_gender=["male"]`.
 - Use `query="meal plan explanation"` for the creative-content part.
 
+For requests with several related creative ideas, keep each query focused:
+
+```json
+{
+  "query": ["dog training tip", "dog walking routine", "puppy care app demo"],
+  "category": "LIFESTYLE",
+  "active_status": "active",
+  "media_type": "video",
+  "group_by_app": true,
+  "limit": 20
+}
+```
+
 People labels are AI creative-content labels. Describe them as "male-presenting/female-presenting creative labels" or "detected people mix"; do not imply identity recognition.
 
 For one paid ad selected from results:
 
-- Use `ad_detail` with `creative_key` when the user wants the full creative snapshot, media, app context, or AI analysis for that ad.
-- Use `similar_ads` with `creative_key` when the user wants more creatives like that ad.
+- Use `ad_detail` with `public_id` (`ad_...`) when available; pass it as `creative_key`. Internal `creative_key` and representative `ad_id` also work.
+- Use `similar_ads` with `public_id` (`ad_...`) when available; pass it as `creative_key`.
 - Use `ad_id` only when `creative_key` is not available.
 
 For app-specific ad or reel research:
@@ -127,25 +165,54 @@ For app-specific ad or reel research:
 
 For hook and duration requests:
 
-- Use `query` for exact hook wording, hook ideas, caption text, spoken transcript, OCR text, scenes, or product moments.
-- When the user asks to search the hook itself, set `search_scope="hook"` so `query` searches only hook fields rather than the broad AI creative index.
-- Use `hook_type` when the user asks for hook categories or patterns rather than exact copy.
+- Use `query` for creative ideas, caption text, spoken transcript, OCR text, scenes, product moments, or hook-like wording, knowing it searches the full creative profile rather than only a hook field.
+- Use `hook_type` only when the user asks for hook-category labels or patterns rather than semantic search over hook text.
 - Use `min_video_duration_seconds` and `max_video_duration_seconds` when the user asks for short, long, or duration-banded video creatives or reels.
 - Keep category, active status, revenue, dates, grouping, sorting, and pagination in filters or typed arguments.
 
 ## Pagination
 
-Default search pages return about 30 results. Search responses include `pagination.has_more`, `pagination.next_offset`, `pagination.next_app_offset`, and usually `pagination.next_request`.
+Flat search pages return up to 50 paid creatives or organic reels. Grouped app pages return up to 20 apps, with up to 24 ads or reels per app. Search responses include `pagination.has_more`, `pagination.next_offset`, `pagination.next_app_offset`, and usually `pagination.next_request`.
 
-When `pagination.has_more=true`, call the same tool again with `pagination.next_request`. For grouped app results, the next page normally uses `app_offset`; for flat creative results, it normally uses `offset`.
+When `pagination.has_more=true`, call the same tool again with `pagination.next_request`. For grouped app results, the next page normally uses `app_offset` to fetch more apps. To inspect more than 24 ads or reels from one selected app, make a follow-up flat request with `include_app_ids` for that app, `group_by=""`, and `offset` pagination; that counts as another request.
 
 ## Saved Research
 
-Use `list_collections` before saving if the user asks to add something to an existing collection. Use `create_collection` when the user names a new collection. Use `save_item` for apps, paid ads, and organic reels. Use `save_filter` when the user wants to reuse a research query such as "active Health & Fitness paid ads between 15k and 30k revenue."
+Use `list_collections` before saving if the user asks to add something to an existing collection. Use `create_collection` when the user names a new collection. Use `save_item` for apps, paid ads, and organic reels. Use search result `public_id` as `item_key` for ads (`ad_...`) and reels (`reel_...`) when present; use app `id` for apps. App Fuel hydrates saved item title, media, links, metadata, and source payload from `item_type` plus `item_key`; do not provide override fields for those generated values.
 
 Collections are private by default. Create or update a collection with `is_public=true` only when the user asks for a public/shareable collection or direct link. Public collections include `collection.url`; return that direct link when it is present. Private collections do not include a public URL.
 
 Users can keep up to 20,000 saved items inside collections across all collections. If saving or moving an item returns a collection-limit error, explain that the item was not added to a collection and suggest removing older collected items or using saved filters for larger research sets.
+
+## Research Canvases
+
+Use canvases when the user wants findings laid out visually. A canvas can contain media/video nodes, label nodes, static html insight nodes, groups, and arrows.
+
+Read `references/canvases.md` before creating a new canvas, updating an existing canvas, adding html insight nodes, arranging many findings, or using snapshots.
+
+- Use `list_canvases` before modifying an existing board.
+- Use `get_canvas` to inspect current nodes, arrows, groups, and viewport before updating.
+- Use stable node, group, and edge ids so future updates can move or annotate the same items.
+- Use `name` in `create_canvas` or `update_canvas` when the user asks to name or rename a board.
+- Use arrows with `fromNodeId`/`toNodeId` to attach to nodes, `start`/`end` points for freeform arrows, or one attached endpoint plus one free point.
+- Place findings in readable columns or groups. Keep media nodes large enough to preview, and add short label or static html nodes for takeaways and compact analytics.
+- Use `get_canvas_snapshot` after large layout changes or when a visual check is useful. Pass `crop: {x, y, width, height}` to inspect one specific area.
+- Return `canvas.workspaceUrl` so the signed-in user can open the board.
+- If the user asks for a public/shareable board, create or update the canvas with `is_public=true` and return `canvas.url` when present.
+
+## Interactive Follow-Ups
+
+After a useful research result, offer 2-3 concrete next actions that fit the result. Phrase them as short questions the user can answer with yes/no or a number. Do not offer every possible action; choose the most helpful next steps.
+
+Good follow-ups include:
+
+- "Should I save these to a collection?"
+- "Should I create an infinite canvas with the strongest examples and pattern notes?"
+- "Should I find the repeated hooks, offers, and visual trends across these results?"
+- "Should I pull similar ads for the top 3 examples?"
+- "Should I narrow this to smaller apps, higher revenue apps, or a specific country/category?"
+
+When the user says yes to a follow-up, use the relevant MCP tools immediately. For collections, save the selected apps/ads/reels or reusable filter. For canvases, create or update a board and return `canvas.workspaceUrl`; make it public only if the user asks for a shareable link.
 
 ## Video Review Guidance
 

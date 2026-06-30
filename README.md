@@ -94,12 +94,14 @@ Before answering App Fuel questions:
 3. If the MCP client asks for authorization, open the browser login and approve App Fuel.
 4. If App Fuel MCP tools are available, use them instead of raw HTTP.
 5. If the current session cannot see the hosted MCP server after configuration, say that a new agent session or MCP client restart/refresh is needed.
-6. Use query only for creative/content search inside ads or reels. Put category, running status, dates, grouping, and sorting in filters.
-7. Use pagination.next_request when a response has more results.
-8. Return view_url links when present so the user can inspect the matching creative gallery.
-9. Use collection tools when the user asks to save or organize research.
-10. Do not ask the user to paste an App Fuel API key into chat. If OAuth is unavailable, ask the user to use the API-key fallback from the App Fuel API page.
-11. Do not print OAuth tokens, API keys, authorization codes, or refresh tokens in status messages, command transcripts, or final notes.
+6. Use query for whole creative-profile search inside ads or reels, not hook-only or field-specific search. Put category, running status, dates, grouping, sorting, pagination, and app-level semantic constraints in filters or typed arguments.
+7. Use query as a string array for several short creative-content alternatives instead of one long keyword string.
+8. Use app_product_query for full app-profile embedding search such as "photo and video editing apps"; it is not a hook/positioning-only embedding. Do not add a broad category filter unless the user asked for it.
+9. Flat search pages are capped at 50 paid creatives or organic reels. Grouped app pages are capped at 20 apps, with up to 24 ads/reels per app. Use pagination.next_request when a response has more results; for deeper examples from one app, make a follow-up flat request with include_app_ids for that app and offset pagination.
+10. Return view_url links when present so the user can inspect the matching creative gallery.
+11. Use collection tools when the user asks to save or organize research.
+12. Do not ask the user to paste an App Fuel API key into chat. If OAuth is unavailable, ask the user to use the API-key fallback from the App Fuel API page.
+13. Do not print OAuth tokens, API keys, authorization codes, or refresh tokens in status messages, command transcripts, or final notes.
 ```
 
 ## Notes
