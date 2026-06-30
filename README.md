@@ -1,6 +1,6 @@
 # App Fuel Agent Skill
 
-Public agent instructions for using App Fuel app, paid ad, organic reel, and saved research intelligence from Codex, Claude Code, Cursor, Windsurf, and other agent clients.
+Public agent instructions for using App Fuel app, Apple App Store review, paid ad, organic reel, and saved research intelligence from Codex, Claude Code, Cursor, Windsurf, and other agent clients.
 
 Recommended repository name:
 
@@ -11,6 +11,7 @@ appfuel-agent-skill
 ## What This Gives Agents
 
 - How to search App Fuel apps, paid ads, and organic Instagram Reels.
+- How to fetch public Apple App Store reviews for pain-point, objection, praise-language, and hook research.
 - When to use `query` versus structured filters.
 - How to return App Fuel gallery links for human review.
 - How to paginate and save useful findings to App Fuel collections.
@@ -78,7 +79,7 @@ cp -R appfuel-data "${CODEX_HOME:-$HOME/.codex}/skills/appfuel-data"
 Paste this into an agent after the MCP connector is configured:
 
 ```text
-Use App Fuel as an agent data source for app, paid ad, organic reel, and saved research intelligence.
+Use App Fuel as an agent data source for app, Apple App Store review, paid ad, organic reel, and saved research intelligence.
 
 API base: https://new.theappfuel.com/api/elite/v1/elite
 Agent instructions: https://new.theappfuel.com/api/elite/v1/elite/agent/instructions.md
@@ -99,9 +100,11 @@ Before answering App Fuel questions:
 8. Use app_product_query for full app-profile embedding search such as "photo and video editing apps"; it is not a hook/positioning-only embedding. Do not add a broad category filter unless the user asked for it.
 9. Flat search pages are capped at 50 paid creatives or organic reels. Grouped app pages are capped at 20 apps, with up to 24 ads/reels per app. Use pagination.next_request when a response has more results; for deeper examples from one app, make a follow-up flat request with include_app_ids for that app and offset pagination.
 10. Return view_url links when present so the user can inspect the matching creative gallery.
-11. Use collection tools when the user asks to save or organize research.
-12. Do not ask the user to paste an App Fuel API key into chat. If OAuth is unavailable, ask the user to use the API-key fallback from the App Fuel API page.
-13. Do not print OAuth tokens, API keys, authorization codes, or refresh tokens in status messages, command transcripts, or final notes.
+11. Use app_store_reviews when the user needs public Apple App Store review text, low-star pain points, high-star praise language, objections, trust gaps, desired outcomes, or hook inspiration. Countries are required storefront codes like us, gb, or de; one call scans at most 1,000 total reviews and counts against API usage.
+12. For creative briefs, cluster review pains, connect them to winning ad/reel angles, and return hook/body/CTA ideas with review evidence and confidence. AI drafts; a human approves.
+13. Use collection tools when the user asks to save or organize research.
+14. Do not ask the user to paste an App Fuel API key into chat. If OAuth is unavailable, ask the user to use the API-key fallback from the App Fuel API page.
+15. Do not print OAuth tokens, API keys, authorization codes, or refresh tokens in status messages, command transcripts, or final notes.
 ```
 
 ## Notes

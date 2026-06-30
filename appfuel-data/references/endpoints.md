@@ -23,6 +23,7 @@ Public endpoints:
 - `GET /agent/schema/ads`: paid ads filters, pagination, and response shape.
 - `GET /agent/schema/reels`: organic reels filters, pagination, and response shape.
 - `GET /agent/schema/apps`: app search/detail fields.
+- `GET /agent/schema/app-reviews`: Apple App Store review inputs, limits, and response shape.
 - `GET /agent/schema/collections`: saved research operations.
 - `GET /agent/schema/canvases`: research canvas operations and state shape.
 - `GET /mcp/connection`: hosted MCP connection snippets.
@@ -37,6 +38,7 @@ Protected endpoints:
 - `GET /agent/usage`: monthly request and download usage.
 - `POST /agent/apps/search`: app discovery by name, category, audience, job-to-be-done, competitor set, product concept, or app description.
 - `POST /agent/apps/detail`: one app's metadata, intelligence, revenue series, latest rankings, similar apps, and App Fuel gallery entry points.
+- `POST /agent/apps/reviews`: live public Apple App Store reviews for one app and storefront countries. Use for pain points, objections, praise language, and hook research.
 - `POST /agent/ads/search`: enriched paid ad search.
 - `POST /agent/ads/detail`: detailed paid ad creative snapshot, media, app context, and sanitized AI analysis.
 - `POST /agent/ads/similar`: similar paid ad creatives from one source creative.
@@ -60,6 +62,32 @@ App search request:
   "offset": 0
 }
 ```
+
+App Store reviews request:
+
+```json
+{
+  "app_id": "897446215",
+  "countries": ["us", "gb"],
+  "reviews_per_country": 200,
+  "ratings": [1, 2, 3],
+  "locale": "en-US"
+}
+```
+
+Review notes:
+
+- `countries` is required and uses two-letter Apple storefront codes.
+- One call scans at most 1,000 total reviews across all countries.
+- Apple returns 20 reviews per upstream page; App Fuel fetches and merges pages.
+- `ratings` filters after fetching the latest scanned reviews. The backend does not keep crawling until it finds 1,000 matching low-star or high-star reviews.
+- Reviews are returned live and are not stored in App Fuel Postgres.
+- Apple documents App Store Connect customer review APIs for owned apps, but this public storefront review source is an observed AMP API and is not documented by Apple as a public developer API.
+- If `reviews_per_country` or `countries * reviews_per_country` exceeds 1,000 scanned reviews, the REST endpoint returns HTTP 400 with `error.code="app_reviews_limit_exceeded"`, plus `requested` and `limit`.
+
+Agent REST and MCP tool errors use `{"error": {...}, "detail": {...}}`. Branch on `error.code`; use `error.invalid_fields[]` to repair request fields before retrying. Common codes are `invalid_request`, `app_reviews_limit_exceeded`, `app_reviews_country_limit_exceeded`, `not_found`, `app_not_found`, `ad_not_found`, `canvas_not_found`, `apple_reviews_rate_limited`, `apple_reviews_configuration_error`, `apple_reviews_upstream_error`, and `monthly_request_limit_exceeded`.
+
+MCP tools return the same `error`/`detail` object for validation and not-found failures. The `app_store_reviews` tool also returns this object for Apple upstream failures.
 
 Paid ads request:
 

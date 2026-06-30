@@ -1,6 +1,6 @@
 # App Fuel Response Fields
 
-The API returns compact agent-facing objects, not raw database rows. Read `/agent/schema`, `/agent/schema/ads`, `/agent/schema/reels`, `/agent/schema/apps`, `/agent/schema/collections`, `/agent/schema/canvases`, or `/agent/openapi.json` for the latest contract.
+The API returns compact agent-facing objects, not raw database rows. Read `/agent/schema`, `/agent/schema/ads`, `/agent/schema/reels`, `/agent/schema/apps`, `/agent/schema/app-reviews`, `/agent/schema/collections`, `/agent/schema/canvases`, or `/agent/openapi.json` for the latest contract.
 
 Top-level search response fields:
 
@@ -82,6 +82,27 @@ App search and app detail fields:
 - `latest_rankings`: latest category/country ranking rows when requested.
 - `similar_apps`: compact app objects.
 - `view_urls.ads`, `view_urls.organic_reels`: App Fuel gallery entry points for that app.
+
+App Store review fields:
+
+- `schema_version`, `generated_at`, `summary`
+- `source.name`, `source.endpoint`, `source.documented`, `source.apple_page_size`, `source.apple_request`: upstream AMP source metadata with sensitive headers/proxies redacted.
+- `request.app_id`, `request.countries`, `request.reviews_per_country`, `request.total_review_cap`, `request.ratings`, `request.locale`
+- `app.id`, `app.store_url`
+- `metrics.apple_requests`, `metrics.elapsed_ms`, `metrics.scanned_reviews`, `metrics.filtered_out_reviews`, `metrics.returned_reviews`
+- `countries[]`: per-country requested/returned counts, scanned reviews, filtered reviews, newest/oldest review dates, Apple request count, retry metadata, used proxies, empty-page stop state, and scan-cap state.
+- `reviews[]`: flattened reviews with `id`, `app_id`, `country`, `rank`, `rating`, `title`, `body`, `reviewer_nickname`, `created_at`, and `is_edited`.
+
+Use low-star review bodies for pain clusters, objections, trust gaps, cancellation reasons, confusing UX, and missing features. Use high-star review bodies for desired outcomes, proof language, recommendation language, and moments of delight. Do not assume rating filters return exactly the requested count: rating filters are applied after scanning the latest reviews.
+
+Agent REST and MCP error fields:
+
+- Errors return both `error` and `detail`; they contain the same object for compatibility.
+- `error.code`: machine-readable code such as `invalid_request`, `app_reviews_limit_exceeded`, `app_reviews_country_limit_exceeded`, `not_found`, `app_not_found`, `ad_not_found`, `canvas_not_found`, `apple_reviews_rate_limited`, `apple_reviews_configuration_error`, `apple_reviews_upstream_error`, or `monthly_request_limit_exceeded`.
+- `error.message`: human-readable explanation.
+- `error.status`: HTTP status code.
+- `error.invalid_fields[]`: repair hints for validation errors. Items can include `field`, alternative `fields`, `reason`, `hint`, and rejected `value`.
+- Limit errors can include `requested` and `limit`; monthly usage errors include `used`, `limit`, and `resetAt`.
 
 Saved research fields:
 

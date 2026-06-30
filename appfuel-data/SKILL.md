@@ -1,12 +1,12 @@
 ---
 name: appfuel-data
-version: 2026-06-30.agent-guide.3
-description: Use App Fuel enriched app, paid ad, organic reel, and saved research intelligence through the App Fuel MCP tools. Trigger when a user asks for app market research, app discovery, competitor lists, paid ad examples, organic content examples, creative patterns, revenue-filtered app research, saved App Fuel research collections, or visual research canvases.
+version: 2026-06-30.agent-guide.5
+description: Use App Fuel enriched app, Apple App Store review, paid ad, organic reel, and saved research intelligence through the App Fuel MCP tools. Trigger when a user asks for app market research, app discovery, competitor lists, review pain points, paid ad examples, organic content examples, creative patterns, revenue-filtered app research, saved App Fuel research collections, or visual research canvases.
 ---
 
 # App Fuel Data
 
-Use the App Fuel MCP tools for questions about apps, competitors, paid ads, organic reels, creative patterns, revenue-filtered markets, saved App Fuel research, and visual research canvases.
+Use the App Fuel MCP tools for questions about apps, competitors, Apple App Store reviews, paid ads, organic reels, creative patterns, revenue-filtered markets, saved App Fuel research, and visual research canvases.
 
 Important: `query` searches the whole AI creative/content profile inside ads or reels. It can be a string for one idea or a string array for 2-8 focused alternatives. It is not a hook-only or field-specific embedding search. Do not put app category, app id, market, app product concept, active/running status, media type, dates, revenue, grouping, sorting, or pagination into `query`; send those as explicit tool filters or typed arguments. If the user only asks for an app/category/status list and gives no creative-content constraint, pass `query=""`.
 
@@ -18,19 +18,20 @@ For endpoint, request, and returned-field details, read `references/endpoints.md
 
 1. Call `get_agent_instructions` when local skill guidance may be stale or when tool behavior and local instructions disagree.
 2. Call `describe_agent_schema` when you need the full current surface.
-3. Call `describe_ads_schema`, `describe_reels_schema`, `describe_apps_schema`, `describe_collections_schema`, or `describe_canvases_schema` before guessing filters or fields.
+3. Call `describe_ads_schema`, `describe_reels_schema`, `describe_apps_schema`, `describe_app_reviews_schema`, `describe_collections_schema`, or `describe_canvases_schema` before guessing filters or fields.
 4. Use `search_apps` for app discovery, competitor discovery, audiences, categories, jobs-to-be-done, and product concepts.
 5. Use `app_detail` when the user asks about one app's revenue, rankings, intelligence, similar apps, or ad/reel entry points.
-6. Use `search_ads` for paid ad questions and `search_reels` for organic content questions.
-7. Use `ad_detail` when the user asks to inspect, explain, or extract details from one paid ad returned by search.
-8. Use `similar_ads` when the user asks for more paid creatives like a specific ad.
-9. Extract explicit filters first: category, active status, app ids, media type, revenue, people labels, hook types, duration, grouping, dates, sorting, and pagination.
-10. Put only the actual creative-content constraint in `query`, such as visible UI, scene, claim, offer, pain point, product moment, reel mechanic, or hook-like wording inside the full creative profile.
-11. Send `query` as a string array for 2-8 focused creative-content alternatives when one user request naturally contains several concepts.
-12. Ask for `return_view=true` when visual inspection matters or when the user wants examples.
-13. Return the `view_url` when present.
-14. Use `list_collections`, `create_collection`, `update_collection`, and `save_item` when the user wants to save, organize, share, or revisit research.
-15. Use `list_canvases`, `create_canvas`, `get_canvas`, `update_canvas`, and `get_canvas_snapshot` when the user wants a visual board, mapped findings, grouped examples, arrows, visual inspection, or a link to a research workspace.
+6. Use `app_store_reviews` when the user asks for review text, 1-star/5-star themes, pain points, objections, praise language, or hook inspiration from public Apple App Store reviews.
+7. Use `search_ads` for paid ad questions and `search_reels` for organic content questions.
+8. Use `ad_detail` when the user asks to inspect, explain, or extract details from one paid ad returned by search.
+9. Use `similar_ads` when the user asks for more paid creatives like a specific ad.
+10. Extract explicit filters first: category, active status, app ids, media type, revenue, people labels, hook types, duration, grouping, dates, sorting, and pagination.
+11. Put only the actual creative-content constraint in `query`, such as visible UI, scene, claim, offer, pain point, product moment, reel mechanic, or hook-like wording inside the full creative profile.
+12. Send `query` as a string array for 2-8 focused creative-content alternatives when one user request naturally contains several concepts.
+13. Ask for `return_view=true` when visual inspection matters or when the user wants examples.
+14. Return the `view_url` when present.
+15. Use `list_collections`, `create_collection`, `update_collection`, and `save_item` when the user wants to save, organize, share, or revisit research.
+16. Use `list_canvases`, `create_canvas`, `get_canvas`, `update_canvas`, and `get_canvas_snapshot` when the user wants a visual board, mapped findings, grouped examples, arrows, visual inspection, or a link to a research workspace.
 
 For revenue-band requests such as "apps doing 20k a month and running ads", use `min_app_revenue` and `max_app_revenue` tool arguments or filters. For "around 20k", start with a narrow band such as 15000-30000; for "20k+" use `min_app_revenue=20000` and add `max_app_revenue` when the user asks for smaller apps or a tight band. Do not inspect local config files or credentials to discover hidden API options; use schema tools and documented filters.
 
@@ -159,6 +160,8 @@ For app-specific ad or reel research:
 
 - Use `search_apps` when the app id is unknown.
 - Use `app_detail` when one app has been selected and the user needs context or gallery entry points.
+- Use `app_store_reviews` when the user needs public Apple App Store review text, complaints, praise, objections, trust gaps, missing features, desired outcomes, or hook inspiration for one app. Countries are required two-letter storefronts such as `us`, `gb`, or `de`. Use `ratings=1`, `ratings=5`, `ratings=[1,2,3]`, or `ratings="1-3"` for specific star buckets. One call scans at most 1,000 total reviews and counts against account API usage.
+- If App Store reviews return `error.code="app_reviews_limit_exceeded"`, reduce `reviews_per_country` or split countries into separate calls; do not retry the same oversized request.
 - Use `include_app_ids` with `search_ads` or `search_reels` to restrict results to specific apps.
 - Use `exclude_app_ids` with `search_ads` when the user wants to remove known apps from a market scan.
 - Keep app ids out of `query`.
@@ -169,6 +172,12 @@ For hook and duration requests:
 - Use `hook_type` only when the user asks for hook-category labels or patterns rather than semantic search over hook text.
 - Use `min_video_duration_seconds` and `max_video_duration_seconds` when the user asks for short, long, or duration-banded video creatives or reels.
 - Keep category, active status, revenue, dates, grouping, sorting, and pagination in filters or typed arguments.
+
+## Review-To-Hook Guidance
+
+Use reviews as real user evidence, not generic sentiment filler. For creative strategy or brief generation, pull recent reviews for selected app(s) and countries, then use low-star reviews for pains, objections, churn triggers, confusing UX, missing features, and trust gaps. Use high-star reviews for desired outcomes, proof language, recommendation language, and moments of delight.
+
+For a strong hook workflow, deconstruct winning ads into hook, body, CTA, format, target user, pain point, and proof. Then cluster App Store reviews into real user pains, connect those clusters to competitor ad angles, compare against the user's own top performers when available, and output brief candidates with pain cluster, review evidence, recommended hook/body/CTA, format, why it should work, example first 3 seconds, and confidence. AI drafts; a human approves. Missing reviews or weak evidence should lower confidence, not break the job.
 
 ## Pagination
 
