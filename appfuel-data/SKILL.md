@@ -1,6 +1,6 @@
 ---
 name: appfuel-data
-version: 2026-06-30.agent-guide.5
+version: 2026-06-30.agent-guide.6
 description: Use App Fuel enriched app, Apple App Store review, paid ad, organic reel, and saved research intelligence through the App Fuel MCP tools. Trigger when a user asks for app market research, app discovery, competitor lists, review pain points, paid ad examples, organic content examples, creative patterns, revenue-filtered app research, saved App Fuel research collections, or visual research canvases.
 ---
 
@@ -73,7 +73,9 @@ Cursor or other MCP clients:
 }
 ```
 
-When the MCP client asks for authorization, open the browser login and approve App Fuel. Do not print OAuth tokens, API keys, authorization codes, or refresh tokens in status messages, command transcripts, or final notes.
+When the MCP client asks for authorization, open the browser login and approve App Fuel. Do not print OAuth tokens, API keys, authorization codes, callback URLs, or refresh tokens in status messages, command transcripts, or final notes.
+
+Production setup commands and config must use the hosted App Fuel URLs above, not local development URLs. Desktop and CLI MCP clients may briefly open a private loopback callback such as `http://127.0.0.1:<port>/callback...` after browser approval. That callback belongs to the user's MCP client and is normal for native/CLI OAuth; it is not the App Fuel production server. Never print or summarize callback URLs because they usually contain a short-lived authorization code and state value.
 
 If MCP tools do not reload in the current thread after configuration, ask the user to open a new session or restart/refresh the MCP client.
 
